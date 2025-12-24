@@ -1,0 +1,5 @@
+__pycache__
+/settings
+/history
+openai_settings.json
+config.json

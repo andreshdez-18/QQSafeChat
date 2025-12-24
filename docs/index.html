@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>QQSafeChat 文档</title>
+  <link rel="icon" type="image/png" href="assets/Logo.png" />
+
+  <!-- Docsify 基础主题：干净、稳定、自适应 -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"
+  />
+
+  <!-- 代码高亮（清爽，不是夜店风） -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css"
+  />
+
+  <!-- 轻量自定义（可选，但推荐） -->
+  <style>
+    /* 内容最大宽度，防止大屏太散 */
+    .markdown-section {
+      max-width: 900px;
+      padding: 24px 16px;
+    }
+
+    /* 侧边栏在窄窗口下更友好 */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 240px;
+      }
+    }
+
+    /* 图片自适应 */
+    .markdown-section img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* 页脚（非常克制） */
+    .doc-footer {
+      margin-top: 40px;
+      padding-top: 12px;
+      font-size: 12px;
+      color: #888;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">加载中…</div>
+
+  <script>
+    window.$docsify = {
+      name: "QQSafeChat",
+      repo: "https://github.com/TheD0ubleC/QQSafeChat",
+
+      homepage: "README.md",
+
+      /* 基础结构 */
+      loadSidebar: true,
+      loadNavbar: true,
+      auto2top: true,
+      relativePath: true,
+
+      /* 目录层级 */
+      maxLevel: 4,
+      subMaxLevel: 2,
+
+      /* 搜索（保留，非常有用） */
+      search: {
+        placeholder: "搜索文档",
+        noData: "没有找到结果",
+        depth: 4,
+      },
+
+      /* 代码复制（实用） */
+      copyCode: {
+        buttonText: "复制",
+        errorText: "复制失败",
+        successText: "已复制",
+      },
+
+      plugins: [
+        function (hook) {
+          hook.afterEach(function (html) {
+            return (
+              html +
+              `
+              <div class="doc-footer">
+                © ${new Date().getFullYear()} QQSafeChat
+              </div>
+              `
+            );
+          });
+        },
+      ],
+    };
+  </script>
+
+  <!-- Docsify -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+
+  <!-- 插件（只留必要的） -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+
+  <!-- Prism -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+</body>
+</html>
