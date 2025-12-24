@@ -1,0 +1,6 @@
+Pillow
+pywebview
+pywin32
+Requests
+ttkbootstrap
+uiautomation
