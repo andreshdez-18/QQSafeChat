@@ -18,7 +18,7 @@ from bot_engine import BotEngine
 from config import AppConfig
 from help_launcher import _start_docs_server
 from history_store import HistoryStore
-from llm_client import MockLLMClient, OpenAIClient
+from llm_client import MockLLMClient, OpenAIClient, SiliconFlowClient
 from models import BoundControl
 from settings_store import OpenAISettings, SettingsStore
 from uia_picker import (
@@ -413,8 +413,18 @@ class App:
         )
 
     def make_llm_client(self, s: OpenAISettings):
-        if (s.provider or "").strip().lower() == "openai":
+        provider = (s.provider or "").strip().lower()
+        if provider == "openai":
             return OpenAIClient(
+                api_key=s.api_key,
+                base_url=s.base_url,
+                model=s.model,
+                temperature=s.temperature,
+                system_prompt=s.system_prompt,
+                user_template=s.user_template,
+            )
+        elif provider == "siliconflow":
+            return SiliconFlowClient(
                 api_key=s.api_key,
                 base_url=s.base_url,
                 model=s.model,
@@ -502,17 +512,23 @@ class App:
             self.set_status("未选中控件")
             return
 
+        # 尝试查找指定类型的控件，如果当前控件类型不匹配，则查找其子控件
+        matched_ctrl = ctrl
         try:
             if ctrl.ControlTypeName != expected_type:
-                self.set_status(
-                    f"选中的不是 {expected_type}，而是 {ctrl.ControlTypeName}"
-                )
-                return
-        except Exception:
-            self.set_status("控件类型读取失败")
+                # 从uia_picker导入find_child_control_by_type函数
+                from uia_picker import find_child_control_by_type
+                matched_ctrl = find_child_control_by_type(ctrl, expected_type)
+                if not matched_ctrl:
+                    self.set_status(
+                        f"选中的不是 {expected_type}，而是 {ctrl.ControlTypeName}"
+                    )
+                    return
+        except Exception as e:
+            self.set_status(f"控件类型读取失败: {e}")
             return
 
-        bound = build_bound_control(ctrl, expected_type)
+        bound = build_bound_control(matched_ctrl, expected_type)
         if not bound:
             self.set_status("绑定失败（无法获取 rect）")
             return

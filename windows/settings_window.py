@@ -82,7 +82,7 @@ class SettingsWindow(tk.Toplevel):
         provider = ttk.Combobox(
             row0,
             textvariable=self.provider_var,
-            values=["mock", "openai"],
+            values=["mock", "openai", "siliconflow"],
             width=12,
             state="readonly",
         )
@@ -362,6 +362,12 @@ class SettingsWindow(tk.Toplevel):
             left, text="应用选中人格", command=self._persona_apply_selected
         ).pack(fill="x", pady=(8, 0))
         ttk.Button(left, text="保存文件内容", command=self._persona_save_current).pack(
+            fill="x", pady=6
+        )
+        ttk.Button(left, text="重命名", command=self._persona_rename).pack(
+            fill="x", pady=6
+        )
+        ttk.Button(left, text="删除", command=self._persona_delete).pack(
             fill="x", pady=6
         )
 
@@ -1048,6 +1054,55 @@ class SettingsWindow(tk.Toplevel):
             return
         self._persona_refresh(select=name, check_dirty=True)
 
+    def _persona_rename(self):
+        current_name = self._persona_selected_name()
+        if not current_name:
+            messagebox.showinfo("提示", "请先选中一个人格文件")
+            return
+        
+        new_name = simpledialog.askstring(
+            "重命名人格", 
+            f"将 {current_name} 重命名为：", 
+            initialvalue=current_name,
+            parent=self
+        )
+        if not new_name or new_name == current_name:
+            return
+        
+        ok = self.personas.rename(current_name, new_name)
+        if ok:
+            # 更新当前应用的人格文件名称（如果重命名的是当前应用的文件）
+            if self.cfg.persona_file == current_name:
+                self.cfg.persona_file = new_name
+                self.persona_info.set(f"当前应用：{self.cfg.persona_file}")
+            self._persona_refresh(select=new_name, check_dirty=True)
+            messagebox.showinfo("成功", f"已重命名：{current_name} → {new_name}")
+        else:
+            messagebox.showerror("失败", "重命名失败（可能目标文件已存在或文件名非法）")
+    
+    def _persona_delete(self):
+        current_name = self._persona_selected_name()
+        if not current_name:
+            messagebox.showinfo("提示", "请先选中一个人格文件")
+            return
+        
+        if current_name == self.cfg.persona_file:
+            messagebox.showerror("错误", "不能删除当前正在使用的人格文件")
+            return
+        
+        confirmed = messagebox.askyesno(
+            "确认删除", 
+            f"确定要删除人格文件 {current_name} 吗？此操作不可恢复。",
+            parent=self
+        )
+        if confirmed:
+            ok = self.personas.delete(current_name)
+            if ok:
+                self._persona_refresh(check_dirty=True)
+                messagebox.showinfo("成功", f"已删除：{current_name}")
+            else:
+                messagebox.showerror("失败", "删除失败（可能文件不存在或被占用）")
+    
     def _on_persona_zoom(self, event):
         delta = 0
         if getattr(event, "delta", 0) != 0:
