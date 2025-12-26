@@ -50,3 +50,34 @@ class PersonaStore:
         if os.path.exists(path):
             return False
         return self.write(filename, content)
+    
+    def delete(self, filename: str) -> bool:
+        """删除指定的人格文件"""
+        if not filename:
+            return False
+        path = os.path.join(self.persona_dir, filename)
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+                return True
+            return False
+        except Exception:
+            return False
+    
+    def rename(self, old_filename: str, new_filename: str) -> bool:
+        """重命名人格文件"""
+        if not old_filename or not new_filename:
+            return False
+        if old_filename == new_filename:
+            return True
+        
+        old_path = os.path.join(self.persona_dir, old_filename)
+        new_path = os.path.join(self.persona_dir, new_filename)
+        
+        try:
+            if os.path.exists(old_path) and not os.path.exists(new_path):
+                os.rename(old_path, new_path)
+                return True
+            return False
+        except Exception:
+            return False

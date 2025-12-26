@@ -66,13 +66,41 @@ class HighlightRect:
         win32gui.ShowWindow(self.hwnd, win32con.SW_HIDE)
 
 
-def control_from_point_safe(x: int, y: int, tk_hwnd: int):
+def find_child_control_by_type(ctrl, expected_type: str, max_depth: int = 3) -> Optional[auto.Control]:
+    """递归查找指定类型的子控件"""
+    if not ctrl:
+        return None
+    
+    try:
+        if ctrl.ControlTypeName == expected_type:
+            return ctrl
+    except Exception:
+        pass
+    
+    if max_depth <= 0:
+        return None
+    
+    try:
+        # 遍历所有子控件
+        children = ctrl.GetChildren()
+        for child in children:
+            found = find_child_control_by_type(child, expected_type, max_depth - 1)
+            if found:
+                return found
+    except Exception:
+        pass
+    
+    return None
+
+
+def control_from_point_safe(x: int, y: int, tk_hwnd: int) -> Optional[auto.Control]:
     hwnd = win32gui.WindowFromPoint((x, y))
 
     if hwnd == tk_hwnd or win32gui.IsChild(tk_hwnd, hwnd):
         return None
     try:
-        return auto.ControlFromPoint(x, y)
+        ctrl = auto.ControlFromPoint(x, y)
+        return ctrl
     except Exception:
         return None
 
