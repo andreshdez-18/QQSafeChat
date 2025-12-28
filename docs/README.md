@@ -10,7 +10,7 @@
 
 ### **!!!本项目支持让 AI 发送表情包!!!**
 
-为此，创建了一个独立的项目**StickerSelector**。使用本地微型 AI 模型 `m3e-small` 根据 AI 生成的表情包描述与多个您添加的表情包及其描述词进行向量空间的位置对比来选取最合适的表情包。
+为此，创建了一个独立的项目[**StickerSelector**](https://github.com/TheD0ubleC/StickerSelector/)。使用本地微型 AI 模型 `m3e-small` 根据 AI 生成的表情包描述与多个您添加的表情包及其描述词进行向量空间的位置对比来选取最合适的表情包。
 
 ---
 
@@ -33,6 +33,8 @@
 .....懒得写了 将就看看吧 到时候再补
 
 首先只支持 qq9.0 以上
+
+### StickerSelector 项目部署、使用方式请去[项目仓库](https://github.com/TheD0ubleC/StickerSelector/)。
 
 ### 非常重要的事情：
 
@@ -65,7 +67,7 @@ python app.py
 每次启动前都需要右键点击消息区 然后清屏
 ![alt text](b.png)
 
-StickerSelector 项目暂不对外开放 还没优化好 所以就暂时看不见 ai 发表情包了 不要勾选启用
+
 
 推荐用 `真实女友-基础` 这个人格 我个人感觉是最好的
 
