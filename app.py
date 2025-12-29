@@ -39,7 +39,7 @@ from windows.ui_theme import (
     make_root_window,
     ttk,
 )
-from windows import DebugWindow, InfoWindow, SettingsWindow, LogWindow
+from windows import DebugWindow, InfoWindow, SettingsWindow, StickerSettingsWindow, LogWindow
 
 
 class App:
@@ -53,6 +53,7 @@ class App:
         self.debug_win: DebugWindow | None = None
         self._last_debug_payload: dict | None = None
         self.info_window: InfoWindow | None = None
+        self.sticker_settings_win: StickerSettingsWindow | None = None
 
         self.log_win: LogWindow | None = None
         self._status_log = deque(maxlen=2500)  # 存最近 2500 行，避免无限增长
@@ -84,6 +85,9 @@ class App:
         btns.pack(side="right")
 
         ttk.Button(btns, text="⚙ 设置", command=self.open_settings).pack(side="right")
+        ttk.Button(btns, text="Sticker", command=self.open_sticker_settings).pack(
+            side="right"
+        )
         ttk.Button(btns, text="❓ 帮助", command=self.open_help).pack(
             side="right", padx=(0, 8)
         )
@@ -394,6 +398,26 @@ class App:
             self.apply_settings,
             self.apply_cfg_settings,
         )
+
+    def open_sticker_settings(self):
+        win = getattr(self, "sticker_settings_win", None)
+        if win and win.winfo_exists():
+            win.lift()
+            return
+
+        self.sticker_settings_win = StickerSettingsWindow(
+            self.root, self.cfg, self.apply_cfg_settings
+        )
+
+        def _on_destroy(event):
+            if getattr(event, "widget", None) is self.sticker_settings_win:
+                self.sticker_settings_win = None
+
+        try:
+            self.sticker_settings_win.bind("<Destroy>", _on_destroy)
+            self.sticker_settings_win.lift()
+        except Exception:
+            pass
 
     def apply_settings(self, s: OpenAISettings):
         self.llm = self.make_llm_client(s)

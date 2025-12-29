@@ -394,7 +394,9 @@ class BotEngine:
         selector = StickerSelectorClient(api)
         k_cfg = getattr(self.cfg, "sticker_selector_k", 3) or 3
         series = getattr(self.cfg, "sticker_selector_series", "") or ""
+        order = (getattr(self.cfg, "sticker_selector_order", "") or "").strip() or "desc"
         random_mode = bool(getattr(self.cfg, "sticker_selector_random", False))
+        embed_raw_min = getattr(self.cfg, "sticker_selector_embed_raw_min", 0.0)
         k_final = selector.normalize_k(k_cfg)
         if random_mode and k_final < 2:
             k_final = 2
@@ -416,9 +418,21 @@ class BotEngine:
                     if not prompt_clean:
                         continue
 
-                    choice = selector.choose(prompt_clean, k_final, series, random_mode)
+                    choice = selector.choose(
+                        prompt_clean,
+                        k_final,
+                        series,
+                        order,
+                        random_mode,
+                        embed_raw_min,
+                    )
                     if choice.error:
-                        self.ui_status(f"⚠️ 表情包获取失败：{choice.error}")
+                        if str(choice.error).startswith("embed_raw<"):
+                            self.ui_status(
+                                f"⚠️ embed_raw 低于阈值 {embed_raw_min}，已跳过表情包"
+                            )
+                        else:
+                            self.ui_status(f"⚠️ 表情包获取失败：{choice.error}")
                         continue
                     if not choice.picked:
                         self.ui_status("⚠️ 表情包接口没有返回表情")

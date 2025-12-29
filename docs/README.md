@@ -34,7 +34,7 @@
 
 首先只支持 qq9.0 以上
 
-### StickerSelector 项目部署、使用方式请去[项目仓库](https://github.com/TheD0ubleC/StickerSelector/)。但目前QQSafeChat还没支持新版StickerSelector 先别使用
+### StickerSelector 项目部署、使用方式请去[项目仓库](https://github.com/TheD0ubleC/StickerSelector/)。
 
 ### 非常重要的事情：
 
@@ -42,7 +42,7 @@
 - 千万不要管理员运行 QQ
 - 运行时请不要让 QQ 窗口被任何东西遮挡 最好关闭系统通知
 - 启动后如果焦点到了其他程序上 消息可能会被中断
-- `QQSafeChat`本身非常轻量 推荐在至少`1.5GB RAM + 1 核心`的`WinServer`上运行（已包含 QQNT 所需的资源）以防被其他程序获得焦点后中断回复
+- `QQSafeChat`本身非常轻量 推荐在至少`1.5GB RAM + 1 核心`的`WinServer`或`Ubuntu`上运行（已包含 QQNT 所需的资源）以防被其他程序获得焦点后中断回复
 
 部署方式：
 先安装依赖 我用的是 python3.10.6 作为开发环境 暂时不知道其他环境能不能用 总之最好不要低于这个版本
@@ -67,8 +67,6 @@ python app.py
 每次启动前都需要右键点击消息区 然后清屏
 ![alt text](b.png)
 
-
-
 推荐用 `真实女友-基础` 这个人格 我个人感觉是最好的
 
 > （我不会写 prompt 都是 ai 写的 但只有那个效果最好 她的分支也还可以 TT）
@@ -86,6 +84,6 @@ python app.py
 QQ.exe --force-renderer-accessibility
 ```
 
-我推荐在快捷方式后加上这条参数 如需使用QQ自启动也需要在自启动快捷方式上增加这条参数
+我推荐在快捷方式后加上这条参数 如需使用 QQ 自启动也需要在自启动快捷方式上增加这条参数
 
 原始 Issue：https://github.com/TheD0ubleC/QQSafeChat/issues/1
